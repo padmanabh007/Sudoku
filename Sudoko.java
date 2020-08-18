@@ -1,3 +1,5 @@
+
+
 //Sudoko game
 //import java.util.*;
 
@@ -16,17 +18,15 @@ public class Sudoko{
                      {0,6,0,0,0,0,2,8,0},
                      {0,0,0,4,1,9,0,0,5},
                      {0,0,0,0,8,0,0,7,9}};
-        
-        obj.Print_board(ar);
-        obj.Find_zero(ar);
+       
+		obj.Print_board(ar);
+
+        obj.Solve(ar);
+        System.out.print("_____________________________\n");
         obj.Print_board(ar);
     }
-    int n=0;
-    int k=0,u=0;
-    int value=0;
-    int[] pos ;
-    boolean tf;
-    public void Print_board(int[][] ar){
+        
+    public void Print_board(int[][] ar) {
         
         for (int i=0;i<9;i++) {
             if (i==0) {
@@ -44,74 +44,51 @@ public class Sudoko{
                 System.out.print("|-------+-------+-------|\n");
         }
     }
+    
+    public boolean valid(int[][] ar,int num,int row,int column){
 
-    public void Find_zero(int[][] ar){
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if(ar[i][j]==0){
-                    pos[n]=i;
-                    pos[n+1]=j;
-                    k=i;
-                    u=j;
-                    Valid(ar, 1);
+        for (int i = 0; i < 9; i++){
+            if (ar[row][i]==num && column!=i){
+                return false;
+            }
+        }
+
+        for (int i = 0; i < 9; i++){
+            if(ar[i][row]==num && row!=i){
+                return false;
+            }
+        }
+        int box_row=row/3;
+        int box_column=column/3;
+        for (int i = box_row*3; i < box_row*3+3; i++) {
+            for (int j = box_column*3; j <box_column*3+3; j++) {
+                if(ar[i][j]==num && row!=i&&column!=j){
+                    return false;
                 }
             }
         }
+        return true;
     }
 
-    public void Valid(int[][] ar,int value){
-
-        //Check among the row
-        for (int i = 0; i < 9; i++) {
-            if(ar[pos[n]][i]==value)
-                tf = false;
-            else
-                tf=true;
-        }
-
-        //To check among the column
-        for (int i = 0; i < 9; i++) {
-            if(ar[i][pos[n+1]]==value)
-                tf = false;
-            else
-                tf=true;
-        }
-
-        //to check among the box
-        int box_row=pos[n]/3;
-        int box_column=pos[n+1]/3;
-
-        for (int i = box_row*3 ; i < box_row+2; i++) 
-            for (int j = box_column*3 ; j < box_column+2; j++) 
-                if(ar[i][j]==value)
-                    tf=false;
-                else
-                    tf=true;
+    public boolean Solve(int[][] ar) {
         
-        if(tf){
-            n=n+2;
-            Solve(ar, k, u, value);
-        }
-    }
-
-    public void Solve(int[][] ar,int k,int u,int value){
-
-        if(tf){
-            ar[k][u]=value;
-            value=0;
-        }
-        else{
-            if(value<9)
-                value++;
-            else{
-                k=pos[n-2];
-                u=pos[n-3];
-                value=ar[k][u];
-                ar[k][u]=0;
-                Solve(ar, k, u, value);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if(ar[i][j]==0){
+                    int row=i;
+                    int column=j;
+                    for (int k = 1; k < 10; k++) {
+                        ar[i][j]=k;
+                        if(valid(ar, k, i, j)){
+                            if(Solve(ar))
+                                return true;  
+                        }
+                        ar[row][column]=0;
+                    }
+                }
             }
         }
-        Find_zero(ar);
-        
+
+        return true;
     }
 }
