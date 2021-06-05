@@ -1,3 +1,3 @@
-# Sudoko
+# Sudoku
 
-This is a SUDOKO game solver which is build in java
+This is a SUDOKU game solver which is build in java
