@@ -4,7 +4,7 @@
 //import java.util.*;
 
 
-public class Sudoko{
+public class Sudoku{
 
     public static void main(String[] args) {
 
